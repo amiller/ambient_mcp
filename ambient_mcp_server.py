@@ -269,10 +269,9 @@ def set_user_goal(goal: str) -> str:
 if __name__ == "__main__":
     import os
 
-    # Check if SSL certificates exist
-    cert_path = "./certs/fullchain.pem"
-    key_path = "./certs/privkey.pem"
+    # Use environment variables for configuration
+    host = os.getenv("MCP_HOST", "127.0.0.1")
+    port = int(os.getenv("MCP_PORT", "9101"))
 
-    # Run MCP server on HTTP since it's behind OAuth proxy with SSL
-    logger.info("Starting MCP server on localhost:9101")
-    mcp.run(transport="streamable-http", host="127.0.0.1", port=9101)
+    logger.info(f"Starting MCP server on {host}:{port}")
+    mcp.run(transport="streamable-http", host=host, port=port)

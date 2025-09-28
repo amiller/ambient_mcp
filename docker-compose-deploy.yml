@@ -1,0 +1,15 @@
+# dstack deployment compose file
+# Replace the hash below with actual image hash after building:
+# docker build -t mcp-server . && docker images --digests mcp-server
+
+services:
+  mcp-app:
+    image: socrates1024/mcp-server@sha256:d387afedbafd8f1664ddd05c99c216ee0ca3cb3cbc422ef82940fe52726e0d06
+    ports:
+      - "9100:9100"
+    volumes:
+      - mcp_data:/app/mcp_data
+    restart: unless-stopped
+
+volumes:
+  mcp_data:

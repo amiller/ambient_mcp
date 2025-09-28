@@ -95,6 +95,38 @@ MCP_SERVER_URL = "http://127.0.0.1:9101/mcp"
 - Token-based authentication
 - Request proxying with header filtering
 
+## Docker Deployment
+
+### Build and Run
+```bash
+# Build the image
+docker build -t mcp-server .
+
+# Run locally
+docker run -p 9100:9100 mcp-server
+
+# Push to registry (optional)
+docker tag mcp-server your-registry/mcp-server
+docker push your-registry/mcp-server
+```
+
+### Docker Compose
+```bash
+# Development (builds from source)
+docker-compose up
+
+# Production (uses pre-built image)
+docker-compose -f docker-compose-deploy.yml up
+```
+
+### Dstack Deployment
+```bash
+# Deploy to Phala dstack
+phala deploy docker-compose-deploy.yml --node 3
+```
+
+See `DSTACK_DEPLOYMENT.md` for detailed deployment notes.
+
 ## Development
 
 See `IMPLEMENTATION_NOTES.md` for detailed implementation history and technical decisions.

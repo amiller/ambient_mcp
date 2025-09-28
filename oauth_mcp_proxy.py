@@ -18,6 +18,9 @@ from authlib.oauth2.rfc7591 import ClientRegistrationEndpoint
 from authlib.oauth2.rfc6749.models import ClientMixin, AuthorizationCodeMixin
 from authlib.integrations.flask_oauth2 import AuthorizationServer
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Simple in-memory storage (use a database in production)
 clients_db = {}
@@ -343,5 +346,16 @@ def proxy_to_mcp(path):
         return jsonify({"error": "server_error", "error_description": str(e)}), 500
 
 if __name__ == "__main__":
-    # Run on port 9100 to match your domain routing
-    app.run(host="127.0.0.1", port=9100, debug=True, ssl_context=('./certs/fullchain.pem', './certs/privkey.pem'))
+    import os
+
+    # Use environment variables for configuration
+    host = os.getenv("OAUTH_HOST", "127.0.0.1")
+    port = int(os.getenv("OAUTH_PORT", "9100"))
+    use_ssl = os.getenv("USE_SSL", "true").lower() == "true"
+
+    if use_ssl and os.path.exists('./certs/fullchain.pem'):
+        logger.info(f"Starting OAuth proxy on {host}:{port} with SSL")
+        app.run(host=host, port=port, debug=True, ssl_context=('./certs/fullchain.pem', './certs/privkey.pem'))
+    else:
+        logger.info(f"Starting OAuth proxy on {host}:{port} without SSL")
+        app.run(host=host, port=port, debug=True)
